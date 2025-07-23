@@ -1,12 +1,22 @@
 <template>
-  <div class="min-h-screen bg-gray-100 text-gray-900">
-    <main class="p-4">
+  <main class="min-h-screen flex flex-col">
+    <section class="z-10">
+      <HeaderNavigation />
+    </section>
+    <section class="z-0 flex-grow">
       <RouterView />
-    </main>
-  </div>
+    </section>
+    <section>
+      <FooterVue />
+    </section>
+  </main>
 </template>
 
 <script setup lang="ts">
+
+import HeaderNavigation from './components/HeaderNavigation.vue'
+import FooterVue from './components/Footer.vue'
+
 </script>
 
 <style scoped></style>
