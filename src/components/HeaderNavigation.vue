@@ -1,7 +1,7 @@
 <template>
   <header class="bg-gray-300">
     <nav class="p-5 bg-white shadow md:flex md:items-center md:justify-between">
-      <div class="flex justify-between items-center ">
+      <div class="flex justify-between items-center">
         <span class="text-2xl font-bold cursor-pointer" @click="goHome">
           Marketplace
         </span>
@@ -10,7 +10,8 @@
           <button v-if="menuIcon === 'menu'" @click="toggleMenu">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
           </button>
           <button v-else @click="toggleMenu">
@@ -26,23 +27,27 @@
         class="md:flex md:items-center z-[-1] md:z-auto md:static absolute bg-white w-full left-0 md:w-auto md:py-0 py-4 md:pl-0 pl-7 md:opacity-100 opacity-0 top-[-400px] transition-all ease-in duration-200">
         <template v-if="!authStore.isAuthenticated">
           <li class="mx-4 my-6 md:my-0">
-            <RouterLink class="text-xl hover:text-cyan-500 duration-500" to="/login" @click="closeMenu">Entrar
-            </RouterLink>
+            <RouterLink class="text-xl hover:text-cyan-500 duration-500" to="/login" @click="closeMenu">Entrar</RouterLink>
           </li>
           <li class="mx-4 my-6 md:my-0">
-            <RouterLink class="text-xl hover:text-cyan-500 duration-500" to="/register" @click="closeMenu">Criar conta
-            </RouterLink>
+            <RouterLink class="text-xl hover:text-cyan-500 duration-500" to="/register" @click="closeMenu">Criar conta</RouterLink>
           </li>
         </template>
 
         <template v-else>
           <li class="mx-4 my-6 md:my-0">
-            <RouterLink class="text-xl hover:text-cyan-500 duration-500" to="/me" @click="closeMenu">Minhas cartas
-            </RouterLink>
+            <RouterLink class="text-xl hover:text-cyan-500 duration-500" to="/me" @click="closeMenu">Minhas cartas</RouterLink>
           </li>
           <li class="mx-4 my-6 md:my-0">
-            <RouterLink class="text-xl hover:text-cyan-500 duration-500" to="/dashboard" @click="closeMenu">Dashboard
-            </RouterLink>
+            <RouterLink class="text-xl hover:text-cyan-500 duration-500" to="/dashboard" @click="closeMenu">Dashboard</RouterLink>
+          </li>
+          <li class="mx-4 my-6 md:my-0">
+            <button
+              @click="handleLogout"
+              class="text-xl hover:text-red-500 duration-500"
+            >
+              Sair
+            </button>
           </li>
         </template>
       </ul>
@@ -54,9 +59,11 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../store'
+import { useToast } from 'vue-toastification'
 
 const router = useRouter()
 const authStore = useAuthStore()
+const toast = useToast()
 
 const menuIcon = ref<'menu' | 'close'>('menu')
 
@@ -83,6 +90,13 @@ const goHome = () => {
   router.push('/')
   closeMenu()
 }
-</script>
 
-<style scoped></style>
+const handleLogout = () => {
+  authStore.logout()
+  toast.success('Logout realizado com sucesso 👋', {
+    timeout: 3000,
+    icon: '🚪'
+  })
+  router.push('/')
+}
+</script>

@@ -1,5 +1,4 @@
-import type { AuthResponse, User } from './types'
-import type { AuthState } from './types'
+import type { AuthResponse, User, RegisterPayload, AuthState } from './types'
 import api from '../../api/axios'
 
 const actions = {
@@ -22,6 +21,15 @@ const actions = {
     this.token = null
     this.user = null
     localStorage.removeItem('token')
+  },
+
+  async register(this: AuthState, payload: RegisterPayload): Promise<void> {
+    this.loading = true
+    try {
+      await api.post('/register', payload)
+    } finally {
+      this.loading = false
+    }
   },
 }
 

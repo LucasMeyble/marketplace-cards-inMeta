@@ -4,6 +4,7 @@ const state = (): AuthState => {
   return {
     token: null,
     user: null,
+    loading: false
   }
 }
 
