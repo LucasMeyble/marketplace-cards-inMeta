@@ -39,6 +39,7 @@ import { Field, ErrorMessage, useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import { z } from 'zod'
 import { useAuthStore } from '../store'
+import { useUserStore } from '../store'
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 import { ref } from 'vue'
@@ -49,6 +50,7 @@ interface LoginFormValues {
 }
 
 const authStore = useAuthStore()
+const userStore = useUserStore()
 const router = useRouter()
 const toast = useToast()
 const loading = ref(false)
@@ -72,6 +74,7 @@ const onSubmit = handleSubmit(async (values) => {
   try {
     loading.value = true
     const response = await authStore.login(values.email, values.password)
+    await userStore.fetchUser()
     toast.success(`Bem-vindo, ${response.user.name}! 👋`, {
       timeout: 3000,
     })
