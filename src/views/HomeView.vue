@@ -6,46 +6,31 @@
     </h1>
 
     <div class="max-w-7xl mx-auto">
-      <div
-        class="grid gap-6"
-        :class="{
-          'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4': true
-        }"
-      >
-        <div
-          v-for="card in cards"
-          :key="card.id"
-          @click="onCardClick(card)"
-          class="cursor-pointer rounded-xl overflow-hidden shadow hover:shadow-lg hover:-translate-y-1 transition bg-white flex justify-center items-center p-4"
-        >
-          <img
-            :src="card.imageUrl"
-            :alt="card.name"
-            class="max-h-64 w-auto object-contain"
-          />
+      <div class="grid gap-6" :class="{
+        'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4': true
+      }">
+        <div v-for="card in cards" :key="card.id" @click="onCardClick(card)"
+          class="cursor-pointer rounded-xl overflow-hidden shadow hover:shadow-lg hover:-translate-y-1 transition bg-white flex justify-center items-center p-4">
+          <img :src="card.imageUrl" :alt="card.name" class="max-h-64 w-auto object-contain" />
         </div>
       </div>
     </div>
 
     <div class="flex justify-between items-center mt-6 max-w-7xl mx-auto">
-      <button
-        class="px-4 py-2 bg-indigo-600 text-white rounded disabled:opacity-50"
-        :disabled="page === 1 || loading"
-        @click="changePage(page - 1)"
-      >
+      <button class="px-4 py-2 bg-indigo-600 text-white rounded disabled:opacity-50" :disabled="page === 1 || loading"
+        @click="changePage(page - 1)">
         Página anterior
       </button>
 
       <span class="text-sm font-medium text-gray-700">Página {{ page }}</span>
 
-      <button
-        class="px-4 py-2 bg-indigo-600 text-white rounded disabled:opacity-50"
-        :disabled="!hasMore || loading"
-        @click="changePage(page + 1)"
-      >
+      <button class="px-4 py-2 bg-indigo-600 text-white rounded disabled:opacity-50" :disabled="!hasMore || loading"
+        @click="changePage(page + 1)">
         Próxima página
       </button>
     </div>
+    <ModalCard :show="showModal" :title="modalData.name" :image="modalData.imageUrl"
+      :description="modalData.description" @close="showModal = false" />
   </div>
 </template>
 
@@ -55,10 +40,14 @@ import { ArrowRightIcon } from '@heroicons/vue/24/solid'
 import { useToast } from 'vue-toastification'
 import { storeToRefs } from 'pinia'
 import { useCardsStore } from '../store/cards'
+import { ref } from 'vue'
+import ModalCard from '../components/ui/ModalCard.vue'
 
 const toast = useToast()
 const cardsStore = useCardsStore()
 const { cards, page, hasMore, loading } = storeToRefs(cardsStore)
+const showModal = ref(false)
+const modalData = ref({ name: '', imageUrl: '', description: '' })
 
 async function fetchCards() {
   try {
@@ -73,10 +62,15 @@ function changePage(newPage: number) {
 }
 
 function onCardClick(card: any) {
-  console.log('Carta clicada:', card)
-  toast.info(`Carta selecionada: ${card.name}`)
+  modalData.value = {
+    name: card.name,
+    imageUrl: card.imageUrl,
+    description: card.description,
+  }
+  showModal.value = true
 }
+
+
 
 onMounted(fetchCards)
 </script>
-
